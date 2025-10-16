@@ -130,3 +130,24 @@ tolerations:
 ```bash
 kubectl apply -f ./guides/inference-scheduling/httproute.yaml -n llm-d-inference-scheduling
 ```
+
+#### 2. OOM Errors on Decode pods
+
+**Error**: `Free memory on device on startup is less than desired GPU memory utilization`
+
+**Cause**: Memory utilization of vLLM serve is higher than the GPU can support
+
+**Solution**: Reduce the vLLM serve `--gpu-memory-utilization` that the GPU can support
+
+## Cleanup
+
+```bash
+# Remove specific deployment
+export NAMESPACE=llm-d-inference-scheduling
+helmfile destroy -e default -n ${NAMESPACE}
+
+# Remove prerequisites (affects all deployments)
+cd guides/prereq/gateway-provider
+helmfile destroy -f istio.helmfile.yaml
+./install-gateway-provider-dependencies.sh delete
+```
