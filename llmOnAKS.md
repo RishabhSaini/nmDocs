@@ -116,6 +116,17 @@ tolerations:
   effect: "NoSchedule"
 ```
 
+### Exposing your gateway using the gateway's external IP address
+
+This requires that the release of the llm-d-infra chart must have .gateway.serviceType set to LoadBalancer.
+
+A common issue with AKS LB is that it routes the health probes by default to `/`. 
+For the Model it needs to go to `/health`.
+This needs to be added as an annotation to the Istio Service
+
+
+`"service.beta.kubernetes.io/azure-load-balancer-health-probe-request-path":"/health"`
+
 ## Troubleshooting
 
 ### Common Issues
@@ -151,3 +162,4 @@ cd guides/prereq/gateway-provider
 helmfile destroy -f istio.helmfile.yaml
 ./install-gateway-provider-dependencies.sh delete
 ```
+
