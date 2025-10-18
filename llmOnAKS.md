@@ -118,7 +118,7 @@ tolerations:
 
 ### Exposing your gateway using the gateway's external IP address
 
-This requires that the release of the llm-d-infra chart must have .gateway.serviceType set to LoadBalancer.
+This requires that the release of the llm-d-infra chart must have `.gateway.serviceType` set to `LoadBalancer`.
 
 A common issue with AKS LB is that it routes the health probes by default to `/`. 
 For the Model it needs to go to `/health`.
@@ -162,4 +162,5 @@ cd guides/prereq/gateway-provider
 helmfile destroy -f istio.helmfile.yaml
 ./install-gateway-provider-dependencies.sh delete
 ```
+
 
