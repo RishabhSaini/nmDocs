@@ -4,33 +4,46 @@ from vllm import LLM
 import time
 import signal
 import sys
+import os  # <-- You were missing this import
 
+# Global flag for the signal handler
 running = True
 
 def handle_sigterm(signum, frame):
+    """Signal handler to set the running flag to False."""
     global running
     print("Received SIGTERM, shutting down...")
     running = False
 
-signal.signal(signal.SIGTERM, handle_sigterm)
+def main():
+    """Main function to setup and run the server."""
+    global running
+    
+    # Set up the signal handler
+    signal.signal(signal.SIGTERM, handle_sigterm)
 
-# Simulate loading a vLLM model
-llm = LLM(model="facebook/opt-125m")
+    # --- All logic now inside main() ---
+    
+    print("Loading vLLM model...")
+    # Simulate loading a vLLM model
+    llm = LLM(model="facebook/opt-125m")
 
-print("Model loaded. Waiting... PID:", os.getpid())
-try:
-    while running:
-        time.sleep(1)
-except KeyboardInterrupt:
-    print("Keyboard interrupt received.")
-finally:
-    print("Cleaning up...")
-    # Try deleting LLM instance
-    del llm
-    print("Exiting now.")
-    sys.exit(0)
+    print(f"Model loaded. Waiting... PID: {os.getpid()}")
+    try:
+        while running:
+            # In a real server, this is where you'd process requests
+            time.sleep(1)
+    except KeyboardInterrupt:
+        print("Keyboard interrupt received.")
+    finally:
+        print("Cleaning up...")
+        # Try deleting LLM instance
+        del llm
+        print("Exiting now.")
+        sys.exit(0)
 
-if __name__ == "__main__":   # <- **critical** for multiprocessing
+# This is the critical guard
+if __name__ == "__main__":
     main()
 ```
 
