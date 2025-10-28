@@ -1,5 +1,7 @@
 # **LLM-D on AKS – Problems, Solutions & Key Learnings**
 
+Successfully deployed **llm-d** "Intelligent Inference Scheduling" well-lit path on AKS. Validated end-to-end workflow from cluster setup to inference testing using H100 and A10 NodePools.
+
 - **Problem:** Decode pods fail on GPU due to high memory utilization  
   **Solution:** Reduce `--gpu-memory-utilization` (e.g., from 0.9 → 0.85)  
   **Learning:** Always tune GPU memory settings per workload and GPU type.
