@@ -23,5 +23,5 @@ Successfully deployed **llm-d** "Intelligent Inference Scheduling" well-lit path
   **Learning:** Monitoring stack is necessary for GPU utilization, inference latency, and memory tracking.
 
 - **Problem:** Non-GPU workloads scheduled on GPU nodes  
-  **Solution:** Apply taints on GPU nodes when creating NodePools and matching tolerations on deployements
+  **Solution:** Apply taints on GPU nodes when creating NodePools and matching tolerations on deployements.
   **Learning:** Node taints/tolerations ensure correct workload placement and efficient resource usage.
