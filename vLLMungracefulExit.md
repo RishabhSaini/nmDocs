@@ -47,45 +47,46 @@ print(f"Started server with PID {server.pid}")
 
 time.sleep(5)  # Let it load model
 
-print("Killing parent process abruptly...")
-os.kill(server.pid, signal.SIGKILL)  # <- non-graceful shutdown
-print("Parent killed.")
+print("Terminating parent process abruptly...")
+os.kill(server.pid, signal.SIGTERM)  # <- non-graceful shutdown
+print("Parent terminated.")
 ```
 
 Run:
 ```
 > python client.py
-Started server with PID 79585
-[W1028 09:59:51.460156432 OperatorEntry.cpp:218] Warning: Warning only once for all operators,  other operators may also be overridden.
+Started server with PID 93617
+[W1028 13:03:01.717188052 OperatorEntry.cpp:218] Warning: Warning only once for all operators,  other operators may also be overridden.
   Overriding a previously registered kernel for the same operator and the same dispatch key
   operator: aten::_addmm_activation(Tensor self, Tensor mat1, Tensor mat2, *, Scalar beta=1, Scalar alpha=1, bool use_gelu=False) -> Tensor
     registered at /pytorch/build/aten/src/ATen/RegisterSchema.cpp:6
   dispatch key: AutocastCPU
   previous kernel: registered at /pytorch/aten/src/ATen/autocast_mode.cpp:327
        new kernel: registered at /opt/workspace/ipex-cpu-dev/csrc/cpu/autocast/autocast_mode.cpp:112 (function operator())
-INFO 10-28 09:59:52 [__init__.py:224] Automatically detected platform cpu.
-INFO 10-28 09:59:53 [utils.py:239] non-default args: {'disable_log_stats': True, 'model': 'facebook/opt-125m'}
-INFO 10-28 09:59:53 [model.py:653] Resolved architecture: OPTForCausalLM
+INFO 10-28 13:03:02 [__init__.py:224] Automatically detected platform cpu.
+INFO 10-28 13:03:03 [utils.py:239] non-default args: {'disable_log_stats': True, 'model': 'facebook/opt-125m'}
+INFO 10-28 13:03:03 [model.py:653] Resolved architecture: OPTForCausalLM
 `torch_dtype` is deprecated! Use `dtype` instead!
-INFO 10-28 09:59:53 [model.py:1714] Using max model len 2048
-WARNING 10-28 09:59:53 [logger.py:75] Environment variable VLLM_CPU_KVCACHE_SPACE (GiB) for CPU backend is not set, using 4 by default.
-INFO 10-28 09:59:53 [scheduler.py:225] Chunked prefill is enabled with max_num_batched_tokens=4096.
-Killing parent process abruptly...
-Parent killed.
-(rsaini) rsaini@rsaini-thinkpadt14gen3 ~/i/debug> [W1028 09:59:55.250254253 OperatorEntry.cpp:218] Warning: Warning only once for all operators,  other operators may also be overridden.
+INFO 10-28 13:03:03 [model.py:1714] Using max model len 2048
+WARNING 10-28 13:03:03 [logger.py:75] Environment variable VLLM_CPU_KVCACHE_SPACE (GiB) for CPU backend is not set, using 4 by default.
+INFO 10-28 13:03:03 [scheduler.py:225] Chunked prefill is enabled with max_num_batched_tokens=4096.
+Terminating parent process abruptly...
+Parent terminated.
+Received SIGTERM, shutting down...
+(rsaini) rsaini@rsaini-thinkpadt14gen3 ~/i/debug> [W1028 13:03:05.288541981 OperatorEntry.cpp:218] Warning: Warning only once for all operators,  other operators may also be overridden.
   Overriding a previously registered kernel for the same operator and the same dispatch key
   operator: aten::_addmm_activation(Tensor self, Tensor mat1, Tensor mat2, *, Scalar beta=1, Scalar alpha=1, bool use_gelu=False) -> Tensor
     registered at /pytorch/build/aten/src/ATen/RegisterSchema.cpp:6
   dispatch key: AutocastCPU
   previous kernel: registered at /pytorch/aten/src/ATen/autocast_mode.cpp:327
        new kernel: registered at /opt/workspace/ipex-cpu-dev/csrc/cpu/autocast/autocast_mode.cpp:112 (function operator())
-INFO 10-28 09:59:56 [__init__.py:224] Automatically detected platform cpu.
-INFO 10-28 09:59:57 [utils.py:239] non-default args: {'disable_log_stats': True, 'model': 'facebook/opt-125m'}
-INFO 10-28 09:59:57 [model.py:653] Resolved architecture: OPTForCausalLM
+INFO 10-28 13:03:06 [__init__.py:224] Automatically detected platform cpu.
+INFO 10-28 13:03:07 [utils.py:239] non-default args: {'disable_log_stats': True, 'model': 'facebook/opt-125m'}
+INFO 10-28 13:03:07 [model.py:653] Resolved architecture: OPTForCausalLM
 `torch_dtype` is deprecated! Use `dtype` instead!
-INFO 10-28 09:59:57 [model.py:1714] Using max model len 2048
-WARNING 10-28 09:59:57 [logger.py:75] Environment variable VLLM_CPU_KVCACHE_SPACE (GiB) for CPU backend is not set, using 4 by default.
-INFO 10-28 09:59:57 [scheduler.py:225] Chunked prefill is enabled with max_num_batched_tokens=4096.
+INFO 10-28 13:03:07 [model.py:1714] Using max model len 2048
+WARNING 10-28 13:03:07 [logger.py:75] Environment variable VLLM_CPU_KVCACHE_SPACE (GiB) for CPU backend is not set, using 4 by default.
+INFO 10-28 13:03:07 [scheduler.py:225] Chunked prefill is enabled with max_num_batched_tokens=4096.
 Traceback (most recent call last):
   File "<string>", line 1, in <module>
   File "/home/rsaini/.local/share/uv/python/cpython-3.12.12-linux-x86_64-gnu/lib/python3.12/multiprocessing/spawn.py", line 122, in spawn_main
@@ -163,4 +164,33 @@ RuntimeError:
 
         To fix this issue, refer to the "Safe importing of main module"
         section in https://docs.python.org/3/library/multiprocessing.html
+
+Traceback (most recent call last):
+  File "/home/rsaini/inference/debug/server.py", line 16, in <module>
+    llm = LLM(model="facebook/opt-125m")
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/rsaini/inference/vllm_source/vllm/entrypoints/llm.py", line 328, in __init__
+    self.llm_engine = LLMEngine.from_engine_args(
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/rsaini/inference/vllm_source/vllm/v1/engine/llm_engine.py", line 186, in from_engine_args
+    return cls(
+           ^^^^
+  File "/home/rsaini/inference/vllm_source/vllm/v1/engine/llm_engine.py", line 121, in __init__
+    self.engine_core = EngineCoreClient.make_client(
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/rsaini/inference/vllm_source/vllm/v1/engine/core_client.py", line 93, in make_client
+    return SyncMPClient(vllm_config, executor_class, log_stats)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/rsaini/inference/vllm_source/vllm/v1/engine/core_client.py", line 641, in __init__
+    super().__init__(
+  File "/home/rsaini/inference/vllm_source/vllm/v1/engine/core_client.py", line 470, in __init__
+    with launch_core_engines(vllm_config, executor_class, log_stats) as (
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/rsaini/.local/share/uv/python/cpython-3.12.12-linux-x86_64-gnu/lib/python3.12/contextlib.py", line 144, in __exit__
+    next(self.gen)
+  File "/home/rsaini/inference/vllm_source/vllm/v1/engine/utils.py", line 815, in launch_core_engines
+    wait_for_engine_startup(
+  File "/home/rsaini/inference/vllm_source/vllm/v1/engine/utils.py", line 872, in wait_for_engine_startup
+    raise RuntimeError(
+RuntimeError: Engine core initialization failed. See root cause above. Failed core proc(s): {'EngineCore_DP0': 1}
 ```
